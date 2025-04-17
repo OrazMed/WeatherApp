@@ -1,2 +1,4 @@
 # WeatherApp
-Displays a weather for selected city
+Displays the weather for the selected city.
+
+The LWC component displays weather for the selected city from the drop-down box.
