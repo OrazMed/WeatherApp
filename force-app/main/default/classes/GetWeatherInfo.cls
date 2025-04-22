@@ -20,7 +20,7 @@ public with sharing class GetWeatherInfo {
 
 
             //Forecast Check
-            String forecasetEndp = 'callout:' + NAMED_CREDENTIAL + config.Forecast_Endpoint__c + '?q=' + city + '&days=2';
+            String forecasetEndp = 'callout:' + NAMED_CREDENTIAL + config.Forecast_Endpoint__c + '?q=' + city + '&days=' + config.Days_of_forecast__c;
             Map<String, Object> forecastData = makeApiCall(forecasetEndp);
             
             // Check forecastData
@@ -41,7 +41,7 @@ public with sharing class GetWeatherInfo {
                         Map<String, Object> tomorrowForecast = (Map<String, Object>) forecastDays[1];
                         if (tomorrowForecast != null && tomorrowForecast.containsKey('day')) {
                             Map<String, Object> tomorrowDay = (Map<String, Object>) tomorrowForecast.get('day');
-                            tomorrowDay.put('date', todayForecast.get('date'));
+                            tomorrowDay.put('date', tomorrowForecast.get('date'));
                             result.put('tomorrow', tomorrowDay);
                         }
                     }
@@ -50,7 +50,7 @@ public with sharing class GetWeatherInfo {
 
             return result;
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            throw new AuraHandledException('Error fetching weather info = ' + e.getMessage());
         }
     }
 
@@ -71,7 +71,7 @@ public with sharing class GetWeatherInfo {
             System.debug('The weather data = ' + res.getBody());
             return weather;
         }else {
-            throw new CalloutException('Failed to get weather data = ' + res.getStatus() + '---' + res.getBody());
+            throw new CalloutException('Failed to get weather data');
         }
     }
 

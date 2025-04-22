@@ -38,45 +38,65 @@ private class GetWeatherInfoTest {
 
     @isTest
     static void testGetWeatherInfoEmptyCity() {
-        Boolean coughtException = false;
         try {
             Test.startTest();
             GetWeatherInfo.getWeatherInfo('');
             Test.stopTest();
-        } catch (AuraHandledException ex) {
-            Assert.areEqual('City name cannot be null or empty.', ex.getMessage());
-            coughtException = true;
+            Assert.fail('An exception should have been thrown');
+        } catch (CalloutException ex) {
+            Assert.areEqual('City name cannot be null or empty.', ex.getMessage(), 'Exception message = ' + ex.getMessage());
         }
-        Assert.isTrue(coughtException);
     }
 
     @isTest
     static void testGetWeatherInfoInvalidCity() {
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator(400, '{\"error\":{\"message\":\"Invalid city\"}}', ''));
-        Boolean coughtException = false;
         try {
             Test.startTest();
             GetWeatherInfo.getWeatherInfo('Invalid city');
             Test.stopTest();
+            Assert.fail('An exception should have been thrown');
         } catch (AuraHandledException ex) {
-            Assert.isTrue(ex.getMessage().contains('Failed to get weather data = 400'));
-            coughtException = true;
+            Assert.areEqual('Script-thrown exception', ex.getMessage(), 'Exception message = ' + ex.getMessage());
         }
-        Assert.isTrue(coughtException);
     }
 
     @isTest
     static void testGetWeatherInfoNullCity() {
-        Boolean coughtException = false;
         try {
             Test.startTest();
             GetWeatherInfo.getWeatherInfo(null);
             Test.stopTest();
-        } catch (AuraHandledException ex) {
-            Assert.areEqual('City name cannot be null or empty.', ex.getMessage());
-            coughtException = true;
+            Assert.fail('An exception should have been thrown');
+        } catch (CalloutException ex) {
+            Assert.areEqual('City name cannot be null or empty.', ex.getMessage(), 'Exception message = ' + ex.getMessage());
         }
-        Assert.isTrue(coughtException);
+    }
+
+    @isTest
+    static void testFormatDate() {
+        Date testDate = Date.newInstance(2025, 4, 9);
+        String expectedFormattedDate = '2025-04-09';
+
+        Test.startTest();
+        String formattedDate = GetWeatherInfo.formatDate(testDate);
+        Test.stopTest();
+
+        Assert.areEqual(expectedFormattedDate, formattedDate, 'Exception message = ' + formattedDate);
+    }
+
+    @isTest
+    static void testGetCityNames() {
+        List<String> expectedCityNames = new List<String>();
+        for(City__mdt city : [SELECT City_Name__c, Is_Active__c FROM City__mdt WHERE Is_Active__c = true]) {
+            expectedCityNames.add(city.City_Name__c);
+        }
+        
+        Test.startTest();
+        List<String> cityNames = GetWeatherInfo.getCityNames();
+        Test.stopTest();
+
+        Assert.areEqual(expectedCityNames, cityNames, 'Exception message = ' + cityNames);
     }
 
     public class MockHttpResponseGenerator implements HttpCalloutMock {

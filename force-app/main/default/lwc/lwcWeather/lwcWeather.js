@@ -105,6 +105,6 @@ export default class LwcWeather extends LightningElement {
     get tomorrowsAvgT() {
         return this.isCelsius ? 
             this.weatherData.tomorrow.avgtemp_c + this.temperatureUnitLabel: 
-            this.weatherData.tomorrow.avgtemp_c + this.temperatureUnitLabel;
+            this.weatherData.tomorrow.avgtemp_f + this.temperatureUnitLabel;
     }
 }
