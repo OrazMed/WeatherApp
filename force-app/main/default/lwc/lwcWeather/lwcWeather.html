@@ -1,3 +1,102 @@
 <template>
-    
+    <lightning-card  title="Weather Checker">
+        <div class="slds-p-left_small slds-p-right_small slds-p-bottom_small">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="citySelect">Select City</label>
+                <div class="slds-form-element__control">
+                    <div class="slds-combobox_container slds-has-inline-listbox">
+                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                            <div class="slds-combobox__form-element slds-input-has-icon_right" role="none">
+                                <select id="citySelect" class="slds-select" onchange={handleCityChange}>
+                                    <option value="">--Select a City--</option>
+                                    <template for:each={cities} for:item="city">
+                                        <option key={city} value={city}>{city}</option>
+                                    </template>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <div class="slds-m-top_medium">
+                    <lightning-button variant={buttonVariant} label="Get Weather" title="Check Weather for Selected City" onclick={getWeather} class="slds-button_stretch"></lightning-button>
+                </div>
+                <div class="slds-form-element toggle_button">
+                    <label class="slds-checkbox_toggle slds-grid">
+                    <span class="slds-form-element__label slds-m-bottom_none">{temperatureUnitLabel}</span>
+                    <input type="checkbox" checked="" onchange={toggleTemperatureUnit} />
+                    <span id="checkbox-toggle-16" class="slds-checkbox_faux_container" aria-live="assertive">
+                        <span class="slds-checkbox_faux"></span>
+                        <!--span class="slds-checkbox_on">°C</span>
+                        <span class="slds-checkbox_off">°F</span-->
+                    </span>
+                    </label>
+                </div>
+            </div>
+            
+            <!--WEATHER INFORMATION DISPLAYED BELOW-->
+            <template if:true={error}>
+                <p class="slds-text-color_error slds-m-top_small">{error}</p>
+            </template>
+
+            <template if:true={gotData}>
+                <template if:true={weatherData.current.current.temp_c}>
+
+                    <div class="slds-grid slds-wrap slds-grid_pull-padded-medium slds-m-top_small content">
+                        <div class="slds-col slds-size_1-of-2 slds-p-horizontal_medium">
+                            <h2 class="slds-text-heading_medium">
+                                <strong>{weatherData.current.location.name}, {weatherData.current.location.country}</strong>
+                            </h2>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-p-horizontal_medium">
+
+                        </div>
+                        <!--CURRENT-->
+                        <div class="slds-col slds-size_1-of-2 slds-p-horizontal_medium slds-p-around_small">
+                            <h2 class="slds-text-heading_medium">Current Weather</h2>
+                            <p><img src={weatherData.current.current.condition.icon}/> {weatherData.current.current.condition.text}</p>
+                            <p class="temperature"><strong>{currentTemperature}</strong></p>
+                            <p><strong>Feels Like:</strong> {feelsLikeT}</p>
+                            <p><strong>Humidity:</strong> {weatherData.current.current.humidity}%</p>
+                            <p><strong>Wind:</strong> {weatherData.current.current.wind_kph} kph {weatherData.current.current.wind_dir}</p>
+                            <p><strong>Last Updated:</strong> {weatherData.current.current.last_updated}</p>
+                        </div>
+                        
+                        <!--FORECAST-->
+                        <div class="slds-col slds-size_1-of-2 slds-p-horizontal_medium slds-p-around_small">
+                            <h2 class="slds-text-heading_medium">Forecast</h2>
+                            <div class="slds-grid slds-wrap slds-grid_pull-padded">
+                                <!--Today-->
+                                <div class="slds-col slds-size_1-of-2 slds-p-horizontal_small">
+                                    <h2 class="slds-text-heading_small"><strong>Today</strong> ({weatherData.today.date})</h2>
+                                    <p><img src={weatherData.today.condition.icon}> {weatherData.today.condition.text}</p>
+                                    <p><strong>High:</strong> {todaysMaxT}</p>
+                                    <p><strong>Low:</strong> {todaysMinT}</p>
+                                    <p><strong>Average:</strong> {todaysAvgT}</p>
+                                    <p><strong>Humidity:</strong> {weatherData.today.avghumidity}%</p>
+                                    <p><strong>Wind:</strong> {weatherData.today.maxwind_kph} kph</p>
+                                </div>
+                                
+                                <!--Tomorrow -->
+                                <div class="slds-col slds-size_1-of-2 slds-p-horizontal_small">
+                                    <h2 class="slds-text-heading_small"><strong>Tomorrow</strong> ({weatherData.tomorrow.date})</h2>
+                                    <p><img src={weatherData.today.condition.icon}> {weatherData.today.condition.text}</p>
+                                    <p><strong>High:</strong> {tomorrowsMaxT}</p>
+                                    <p><strong>Low:</strong> {tomorrowsMinT}</p>
+                                    <p><strong>Average:</strong> {tomorrowsAvgT}</p>
+                                    <p><strong>Humidity:</strong> {weatherData.tomorrow.avghumidity}%</p>
+                                    <p><strong>Wind:</strong> {weatherData.tomorrow.maxwind_kph} kph</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </template>
+            </template>
+            
+        </div>
+
+    </lightning-card>
 </template>

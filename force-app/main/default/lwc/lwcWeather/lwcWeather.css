@@ -1,0 +1,28 @@
+.header {
+    display: flex;
+    justify-content: start;
+}
+
+.header_text {
+    font-size: large;
+    font-weight: 500;
+}
+
+.content {
+    background-color: rgb(230, 249, 255);
+    margin: 0;
+    margin-top: 7px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.toggle_button {
+    margin-top: 15px;
+}
+
+.temperature {
+    font-size: large;
+}
