@@ -1,17 +1,6 @@
 @isTest
 private class GetWeatherInfoTest {
 
-    /*@TestSetup
-    static void setup() {
-        WeatherAppConfig__mdt config = new WeatherAppConfig__mdt();
-        config.MasterLabel = 'Default_Config';
-        config.DeveloperName = 'Default_Config';
-        config.Current_Endpoint__c = '/current.json';
-        config.Forecast_Endpoint__c = '/forecast.json';
-        
-        insert config;
-    }*/
-
     @isTest
     static void testGetWeatherInfo(){
         
